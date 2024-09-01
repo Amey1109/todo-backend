@@ -13,6 +13,7 @@ class Users(Base):
     is_active = Column(Boolean, default = True)
     role = Column(String)
     refresh_token = Column(String, nullable=True)
+    phone_number = Column(String)
 
 class Todos(Base):
     __tablename__ ="todos"
