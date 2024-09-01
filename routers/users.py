@@ -28,9 +28,16 @@ class NewPassword(BaseModel):
 class NewPhoneNumber(BaseModel):
     phone_number:str = Field(min_length=10)
 
+class CurrentUser(BaseModel):
+    username: str
+    last_name:str
+    phone_number:str
+    email:str
+    role: str
 
 
-@router.get("/get_current_user", status_code=status.HTTP_200_OK)
+
+@router.get("/get_current_user", status_code=status.HTTP_200_OK, response_model=CurrentUser)
 async def get_current_user(user: user_dependency,db:db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not authenticated.")
