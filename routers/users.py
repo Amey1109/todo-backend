@@ -25,9 +25,12 @@ class NewPassword(BaseModel):
     current_password: str
     new_password: str = Field(min_length=6)
 
+class NewPhoneNumber(BaseModel):
+    phone_number:str = Field(min_length=10)
 
 
-@router.get("/get_current_user", status_code=status.HTTP_204_NO_CONTENT)
+
+@router.get("/get_current_user", status_code=status.HTTP_200_OK)
 async def get_current_user(user: user_dependency,db:db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not authenticated.")
@@ -45,3 +48,10 @@ async def change_password(user: user_dependency, db:db_dependency, new_password_
     db.add(user_model)
     db.commit()
 
+@router.put("/update_phone_number", status_code=status.HTTP_204_NO_CONTENT)
+async def update_phone_number(user: user_dependency, db: db_dependency, new_phone_number_request: NewPhoneNumber):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not authenticated.")
+    user_model = db.query(Users).filter(Users.id == user.get("id")).first()
+    user_model.phone_number = new_phone_number_request.phone_number
+    db.commit()
